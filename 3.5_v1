@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disney Tic-Tac-Toe</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 36px;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Disney Tic-Tac-Toe</h1>
+    <p>Player 1: Mickey Mouse</p>
+    <p>Player 2: Minnie Mouse</p>
+    <div class="board" id="board">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+    </div>
+    <script>
+        const board = document.getElementById('board');
+        const cells = board.querySelectorAll('.cell');
+        let currentPlayer = 1;
+
+        const characters = ['&#128105;', '&#128507;']; // Mickey Mouse and Minnie Mouse emojis
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+
+        function handleCellClick(e) {
+            const cell = e.target;
+            if (!cell.innerHTML) {
+                cell.innerHTML = characters[currentPlayer - 1];
+                cell.style.pointerEvents = 'none';
+                currentPlayer = 3 - currentPlayer; // Switch player
+                checkWin();
+            }
+        }
+
+        function checkWin() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            for (const combo of winningCombos) {
+                const [a, b, c] = combo;
+                if (cells[a].innerHTML && cells[a].innerHTML === cells[b].innerHTML && cells[a].innerHTML === cells[c].innerHTML) {
+                    setTimeout(() => {
+                        alert(`Player ${currentPlayer} wins!`);
+                        resetBoard();
+                    }, 100);
+                    return;
+                }
+            }
+
+            if ([...cells].every(cell => cell.innerHTML !== '')) {
+                setTimeout(() => {
+                    alert("It's a draw!");
+                    resetBoard();
+                }, 100);
+            }
+        }
+
+        function resetBoard() {
+            cells.forEach(cell => {
+                cell.innerHTML = '';
+                cell.style.pointerEvents = 'auto';
+            });
+            currentPlayer = 1;
+        }
+    </script>
+</body>
+</html>
